@@ -23,6 +23,8 @@ else ()
 	find_package(LibObs REQUIRED)
 endif ()
 
+include(cmake/ObsPluginHelpers.cmake)
+
 target_sources(
   ${CMAKE_PROJECT_NAME}
   PRIVATE src/obs-ndi.cpp
