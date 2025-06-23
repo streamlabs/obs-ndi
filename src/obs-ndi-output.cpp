@@ -20,7 +20,6 @@ with this program. If not, see <https://www.gnu.org/licenses/>
 #include <util/platform.h>
 #include <util/threading.h>
 #include <util/profiler.h>
-#include <util/circlebuf.h>
 
 #include "obs-ndi.h"
 
