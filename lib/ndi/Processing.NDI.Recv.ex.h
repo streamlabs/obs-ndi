@@ -45,42 +45,49 @@ bool NDIlib_recv_ptz_is_supported(NDIlib_recv_instance_t p_instance);
 //   supports the recording of all stream types, does not take CPU time to record NDI sources (it does not
 //   require any type of re-compression since it can just store the data in the file), it will synchronize
 //   all recorders on a system (and cross systems if NTP clock locking is used).
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-bool NDIlib_recv_recording_is_supported(NDIlib_recv_instance_t p_instance);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED bool
+NDIlib_recv_recording_is_supported(NDIlib_recv_instance_t p_instance);
 
 // PTZ Controls.
 // Zoom to an absolute value.
 // zoom_value = 0.0 (zoomed in) ... 1.0 (zoomed out)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_zoom(NDIlib_recv_instance_t p_instance, const float zoom_value);
+bool NDIlib_recv_ptz_zoom(NDIlib_recv_instance_t p_instance,
+			  const float zoom_value);
 
 // Zoom at a particular speed.
 // zoom_speed = -1.0 (zoom outwards) ... +1.0 (zoom inwards)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_zoom_speed(NDIlib_recv_instance_t p_instance, const float zoom_speed);
+bool NDIlib_recv_ptz_zoom_speed(NDIlib_recv_instance_t p_instance,
+				const float zoom_speed);
 
 // Set the pan and tilt to an absolute value.
 // pan_value  = -1.0 (left) ... 0.0 (centered) ... +1.0 (right)
 // tilt_value = -1.0 (bottom) ... 0.0 (centered) ... +1.0 (top)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_pan_tilt(NDIlib_recv_instance_t p_instance, const float pan_value, const float tilt_value);
+bool NDIlib_recv_ptz_pan_tilt(NDIlib_recv_instance_t p_instance,
+			      const float pan_value, const float tilt_value);
 
 // Set the pan and tilt direction and speed.
 // pan_speed = -1.0 (moving right) ... 0.0 (stopped) ... +1.0 (moving left)
 // tilt_speed = -1.0 (down) ... 0.0 (stopped) ... +1.0 (moving up)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_pan_tilt_speed(NDIlib_recv_instance_t p_instance, const float pan_speed, const float tilt_speed);
+bool NDIlib_recv_ptz_pan_tilt_speed(NDIlib_recv_instance_t p_instance,
+				    const float pan_speed,
+				    const float tilt_speed);
 
 // Store the current position, focus, etc... as a preset.
 // preset_no = 0 ... 99
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_store_preset(NDIlib_recv_instance_t p_instance, const int preset_no);
+bool NDIlib_recv_ptz_store_preset(NDIlib_recv_instance_t p_instance,
+				  const int preset_no);
 
 // Recall a preset, including position, focus, etc...
 // preset_no = 0 ... 99
 // speed = 0.0(as slow as possible) ... 1.0(as fast as possible) The speed at which to move to the new preset.
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_recall_preset(NDIlib_recv_instance_t p_instance, const int preset_no, const float speed);
+bool NDIlib_recv_ptz_recall_preset(NDIlib_recv_instance_t p_instance,
+				   const int preset_no, const float speed);
 
 // Put the camera in auto-focus.
 PROCESSINGNDILIB_API
@@ -89,12 +96,14 @@ bool NDIlib_recv_ptz_auto_focus(NDIlib_recv_instance_t p_instance);
 // Focus to an absolute value.
 // focus_value = 0.0 (focused to infinity) ... 1.0 (focused as close as possible)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_focus(NDIlib_recv_instance_t p_instance, const float focus_value);
+bool NDIlib_recv_ptz_focus(NDIlib_recv_instance_t p_instance,
+			   const float focus_value);
 
 // Focus at a particular speed.
 // focus_speed = -1.0 (focus outwards) ... +1.0 (focus inwards)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_focus_speed(NDIlib_recv_instance_t p_instance, const float focus_speed);
+bool NDIlib_recv_ptz_focus_speed(NDIlib_recv_instance_t p_instance,
+				 const float focus_speed);
 
 // Put the camera in auto white balance mode.
 PROCESSINGNDILIB_API
@@ -116,7 +125,8 @@ bool NDIlib_recv_ptz_white_balance_oneshot(NDIlib_recv_instance_t p_instance);
 // red = 0.0(not red) ... 1.0(very red)
 // blue = 0.0(not blue) ... 1.0(very blue)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_white_balance_manual(NDIlib_recv_instance_t p_instance, const float red, const float blue);
+bool NDIlib_recv_ptz_white_balance_manual(NDIlib_recv_instance_t p_instance,
+					  const float red, const float blue);
 
 // Put the camera in auto-exposure mode.
 PROCESSINGNDILIB_API
@@ -125,17 +135,17 @@ bool NDIlib_recv_ptz_exposure_auto(NDIlib_recv_instance_t p_instance);
 // Manually set the camera exposure iris.
 // exposure_level = 0.0(dark) ... 1.0(light)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_exposure_manual(NDIlib_recv_instance_t p_instance, const float exposure_level);
+bool NDIlib_recv_ptz_exposure_manual(NDIlib_recv_instance_t p_instance,
+				     const float exposure_level);
 
 // Manually set the camera exposure parameters.
 // iris = 0.0(dark) ... 1.0(light)
 // gain = 0.0(dark) ... 1.0(light)
 // shutter_speed = 0.0(slow) ... 1.0(fast)
 PROCESSINGNDILIB_API
-bool NDIlib_recv_ptz_exposure_manual_v2(
-	NDIlib_recv_instance_t p_instance,
-	const float iris, const float gain, const float shutter_speed
-);
+bool NDIlib_recv_ptz_exposure_manual_v2(NDIlib_recv_instance_t p_instance,
+					const float iris, const float gain,
+					const float shutter_speed);
 
 // Recording control.
 // This will start recording.If the recorder was already recording then the message is ignored.A filename is
@@ -145,14 +155,15 @@ bool NDIlib_recv_ptz_exposure_manual_v2(
 // pass NULL.
 //
 // See note above on depreciation and why this is, and how to replace this functionality.
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-bool NDIlib_recv_recording_start(NDIlib_recv_instance_t p_instance, const char* p_filename_hint);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED bool
+NDIlib_recv_recording_start(NDIlib_recv_instance_t p_instance,
+			    const char *p_filename_hint);
 
 // Stop recording.
 //
 // See note above on depreciation and why this is, and how to replace this functionality.
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-bool NDIlib_recv_recording_stop(NDIlib_recv_instance_t p_instance);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED bool
+NDIlib_recv_recording_stop(NDIlib_recv_instance_t p_instance);
 
 // This will control the audio level for the recording. dB is specified in decibels relative to the reference
 // level of the source. Not all recording sources support controlling audio levels.For instance, a digital
@@ -160,16 +171,17 @@ bool NDIlib_recv_recording_stop(NDIlib_recv_instance_t p_instance);
 // support this message.
 //
 // See note above on depreciation and why this is, and how to replace this functionality.
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-bool NDIlib_recv_recording_set_audio_level(NDIlib_recv_instance_t p_instance, const float level_dB);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED bool
+NDIlib_recv_recording_set_audio_level(NDIlib_recv_instance_t p_instance,
+				      const float level_dB);
 
 // This will determine if the source is currently recording. It will return true while recording is in
 // progress and false when it is not. Because there is one recorded and multiple people might be connected to
 // it, there is a chance that it is recording which was initiated by someone else.
 //
 // See note above on depreciation and why this is, and how to replace this functionality.
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-bool NDIlib_recv_recording_is_recording(NDIlib_recv_instance_t p_instance);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED bool
+NDIlib_recv_recording_is_recording(NDIlib_recv_instance_t p_instance);
 
 // Get the current filename for recording. When this is set it will return a non-NULL value which is owned by
 // you and freed using NDIlib_recv_free_string. If a file was already being recorded by another client, the
@@ -177,20 +189,19 @@ bool NDIlib_recv_recording_is_recording(NDIlib_recv_instance_t p_instance);
 // the recorded file, and can be used to access the file on your local machine for playback.  If a UNC path
 // is not available, then this will represent the local filename. This will remain valid even after the file
 // has stopped being recorded until the next file is started.
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-const char* NDIlib_recv_recording_get_filename(NDIlib_recv_instance_t p_instance);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED const char *
+NDIlib_recv_recording_get_filename(NDIlib_recv_instance_t p_instance);
 
 // This will tell you whether there was a recording error and what that string is. When this is set it will
 // return a non-NULL value which is owned by you and freed using NDIlib_recv_free_string. When there is no
 // error it will return NULL.
 //
 // See note above on depreciation and why this is, and how to replace this functionality.
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-const char* NDIlib_recv_recording_get_error(NDIlib_recv_instance_t p_instance);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED const char *
+NDIlib_recv_recording_get_error(NDIlib_recv_instance_t p_instance);
 
 // In order to get the duration.
-typedef struct NDIlib_recv_recording_time_t
-{
+typedef struct NDIlib_recv_recording_time_t {
 	// The number of actual video frames recorded.
 	int64_t no_frames;
 
@@ -207,5 +218,6 @@ typedef struct NDIlib_recv_recording_time_t
 // Get the current recording times.
 //
 // See note above on depreciation and why this is, and how to replace this functionality.
-PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED
-bool NDIlib_recv_recording_get_times(NDIlib_recv_instance_t p_instance, NDIlib_recv_recording_time_t* p_times);
+PROCESSINGNDILIB_API PROCESSINGNDILIB_DEPRECATED bool
+NDIlib_recv_recording_get_times(NDIlib_recv_instance_t p_instance,
+				NDIlib_recv_recording_time_t *p_times);

@@ -75,7 +75,7 @@
 
 // The type instance for a frame-synchronizer.
 struct NDIlib_framesync_instance_type;
-typedef struct NDIlib_framesync_instance_type* NDIlib_framesync_instance_t;
+typedef struct NDIlib_framesync_instance_type *NDIlib_framesync_instance_t;
 
 // Create a frame synchronizer instance that can be used to get frames from a receiver. Once this receiver
 // has been bound to a frame-sync then you should use it in order to receive video frames. You can continue
@@ -84,7 +84,8 @@ typedef struct NDIlib_framesync_instance_type* NDIlib_framesync_instance_t;
 // receiver after the frame-sync has been destroyed.
 //
 PROCESSINGNDILIB_API
-NDIlib_framesync_instance_t NDIlib_framesync_create(NDIlib_recv_instance_t p_receiver);
+NDIlib_framesync_instance_t
+NDIlib_framesync_create(NDIlib_recv_instance_t p_receiver);
 
 // Destroy a frame-sync implementation.
 PROCESSINGNDILIB_API
@@ -107,25 +108,25 @@ void NDIlib_framesync_destroy(NDIlib_framesync_instance_t p_instance);
 // zero and it will return the current received audio format.
 //
 PROCESSINGNDILIB_API
-void NDIlib_framesync_capture_audio(
-	NDIlib_framesync_instance_t p_instance,
-	NDIlib_audio_frame_v2_t* p_audio_data,
-	int sample_rate, int no_channels, int no_samples
-);
+void NDIlib_framesync_capture_audio(NDIlib_framesync_instance_t p_instance,
+				    NDIlib_audio_frame_v2_t *p_audio_data,
+				    int sample_rate, int no_channels,
+				    int no_samples);
 PROCESSINGNDILIB_API
-void NDIlib_framesync_capture_audio_v2(
-	NDIlib_framesync_instance_t p_instance,
-	NDIlib_audio_frame_v3_t* p_audio_data,
-	int sample_rate, int no_channels, int no_samples
-);
+void NDIlib_framesync_capture_audio_v2(NDIlib_framesync_instance_t p_instance,
+				       NDIlib_audio_frame_v3_t *p_audio_data,
+				       int sample_rate, int no_channels,
+				       int no_samples);
 
 // Free audio returned by NDIlib_framesync_capture_audio.
 PROCESSINGNDILIB_API
-void NDIlib_framesync_free_audio(NDIlib_framesync_instance_t p_instance, NDIlib_audio_frame_v2_t* p_audio_data);
+void NDIlib_framesync_free_audio(NDIlib_framesync_instance_t p_instance,
+				 NDIlib_audio_frame_v2_t *p_audio_data);
 
 // Free audio returned by NDIlib_framesync_capture_audio_v2.
 PROCESSINGNDILIB_API
-void NDIlib_framesync_free_audio_v2(NDIlib_framesync_instance_t p_instance, NDIlib_audio_frame_v3_t* p_audio_data);
+void NDIlib_framesync_free_audio_v2(NDIlib_framesync_instance_t p_instance,
+				    NDIlib_audio_frame_v3_t *p_audio_data);
 
 // This function will tell you the approximate current depth of the audio queue to give you an indication
 // of the number of audio samples you can request. Note that if you should treat the results of this function
@@ -163,10 +164,11 @@ int NDIlib_framesync_audio_queue_depth(NDIlib_framesync_instance_t p_instance);
 PROCESSINGNDILIB_API
 void NDIlib_framesync_capture_video(
 	NDIlib_framesync_instance_t p_instance,
-	NDIlib_video_frame_v2_t* p_video_data,
-	NDIlib_frame_format_type_e field_type NDILIB_CPP_DEFAULT_VALUE(NDIlib_frame_format_type_progressive)
-);
+	NDIlib_video_frame_v2_t *p_video_data,
+	NDIlib_frame_format_type_e field_type
+		NDILIB_CPP_DEFAULT_VALUE(NDIlib_frame_format_type_progressive));
 
 // Free audio returned by NDIlib_framesync_capture_video.
 PROCESSINGNDILIB_API
-void NDIlib_framesync_free_video(NDIlib_framesync_instance_t p_instance, NDIlib_video_frame_v2_t* p_video_data);
+void NDIlib_framesync_free_video(NDIlib_framesync_instance_t p_instance,
+				 NDIlib_video_frame_v2_t *p_video_data);

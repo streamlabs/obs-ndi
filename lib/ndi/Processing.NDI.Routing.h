@@ -30,25 +30,26 @@
 // Structures and type definitions required by NDI routing.
 // The reference to an instance of the router.
 struct NDIlib_routing_instance_type;
-typedef struct NDIlib_routing_instance_type* NDIlib_routing_instance_t;
+typedef struct NDIlib_routing_instance_type *NDIlib_routing_instance_t;
 
 // The creation structure that is used when you are creating a sender.
-typedef struct NDIlib_routing_create_t
-{
+typedef struct NDIlib_routing_create_t {
 	// The name of the NDI source to create. This is a NULL terminated UTF8 string.
-	const char* p_ndi_name;
+	const char *p_ndi_name;
 
 	// What groups should this source be part of.
-	const char* p_groups;
+	const char *p_groups;
 
 #if NDILIB_CPP_DEFAULT_CONSTRUCTORS
-	NDIlib_routing_create_t(const char* p_ndi_name_ = NULL, const char* p_groups_ = NULL);
+	NDIlib_routing_create_t(const char *p_ndi_name_ = NULL,
+				const char *p_groups_ = NULL);
 #endif // NDILIB_CPP_DEFAULT_CONSTRUCTORS
 } NDIlib_routing_create_t;
 
 // Create an NDI routing source.
 PROCESSINGNDILIB_API
-NDIlib_routing_instance_t NDIlib_routing_create(const NDIlib_routing_create_t* p_create_settings);
+NDIlib_routing_instance_t
+NDIlib_routing_create(const NDIlib_routing_create_t *p_create_settings);
 
 // Destroy and NDI routing source.
 PROCESSINGNDILIB_API
@@ -56,7 +57,8 @@ void NDIlib_routing_destroy(NDIlib_routing_instance_t p_instance);
 
 // Change the routing of this source to another destination.
 PROCESSINGNDILIB_API
-bool NDIlib_routing_change(NDIlib_routing_instance_t p_instance, const NDIlib_source_t* p_source);
+bool NDIlib_routing_change(NDIlib_routing_instance_t p_instance,
+			   const NDIlib_source_t *p_source);
 
 // Change the routing of this source to another destination.
 PROCESSINGNDILIB_API
@@ -67,9 +69,11 @@ bool NDIlib_routing_clear(NDIlib_routing_instance_t p_instance);
 // to make a lot of sources available on the network. If you specify a timeout that is not 0 then it will
 // wait until there are connections for this amount of time.
 PROCESSINGNDILIB_API
-int NDIlib_routing_get_no_connections(NDIlib_routing_instance_t p_instance, uint32_t timeout_in_ms);
+int NDIlib_routing_get_no_connections(NDIlib_routing_instance_t p_instance,
+				      uint32_t timeout_in_ms);
 
 // Retrieve the source information for the given router instance.  This pointer is valid until
 // NDIlib_routing_destroy is called.
 PROCESSINGNDILIB_API
-const NDIlib_source_t* NDIlib_routing_get_source_name(NDIlib_routing_instance_t p_instance);
+const NDIlib_source_t *
+NDIlib_routing_get_source_name(NDIlib_routing_instance_t p_instance);

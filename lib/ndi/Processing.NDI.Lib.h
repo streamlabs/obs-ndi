@@ -28,79 +28,79 @@
 //***********************************************************************************************************
 
 #ifdef PROCESSINGNDILIB_STATIC
-#	ifdef __cplusplus
-#		define PROCESSINGNDILIB_API extern "C"
-#	else // __cplusplus
-#		define PROCESSINGNDILIB_API
-#	endif // __cplusplus
-#else // PROCESSINGNDILIB_STATIC
-#	ifdef _WIN32
-#		ifdef PROCESSINGNDILIB_EXPORTS
-#			ifdef __cplusplus
-#				define PROCESSINGNDILIB_API extern "C" __declspec(dllexport)
-#			else // __cplusplus
-#				define PROCESSINGNDILIB_API __declspec(dllexport)
-#			endif // __cplusplus
-#		else // PROCESSINGNDILIB_EXPORTS
-#			ifdef __cplusplus
-#				define PROCESSINGNDILIB_API extern "C" __declspec(dllimport)
-#			else // __cplusplus
-#				define PROCESSINGNDILIB_API __declspec(dllimport)
-#			endif // __cplusplus
-#			ifdef _WIN64
-#				define NDILIB_LIBRARY_NAME  "Processing.NDI.Lib.x64.dll"
-#				define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
-#				define NDILIB_REDIST_URL    "http://ndi.link/NDIRedistV5"
-#			else // _WIN64
-#				define NDILIB_LIBRARY_NAME  "Processing.NDI.Lib.x86.dll"
-#				define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
-#				define NDILIB_REDIST_URL    "http://ndi.link/NDIRedistV5"
-#			endif // _WIN64
-#		endif // PROCESSINGNDILIB_EXPORTS
-#	else // _WIN32
-#		ifdef __APPLE__
-#			define NDILIB_LIBRARY_NAME  "libndi.dylib"
-#			define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
-#			define NDILIB_REDIST_URL    "http://ndi.link/NDIRedistV5Apple"
-#		else // __APPLE__
-#			define NDILIB_LIBRARY_NAME  "libndi.so.5"
-#			define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
-#			define NDILIB_REDIST_URL    ""
-#		endif // __APPLE__
-#		ifdef __cplusplus
-#			define PROCESSINGNDILIB_API extern "C" __attribute((visibility("default")))
-#		else // __cplusplus
-#			define PROCESSINGNDILIB_API __attribute((visibility("default")))
-#		endif // __cplusplus
-#	endif // _WIN32
-#endif	// PROCESSINGNDILIB_STATIC
+#ifdef __cplusplus
+#define PROCESSINGNDILIB_API extern "C"
+#else // __cplusplus
+#define PROCESSINGNDILIB_API
+#endif // __cplusplus
+#else  // PROCESSINGNDILIB_STATIC
+#ifdef _WIN32
+#ifdef PROCESSINGNDILIB_EXPORTS
+#ifdef __cplusplus
+#define PROCESSINGNDILIB_API extern "C" __declspec(dllexport)
+#else // __cplusplus
+#define PROCESSINGNDILIB_API __declspec(dllexport)
+#endif // __cplusplus
+#else  // PROCESSINGNDILIB_EXPORTS
+#ifdef __cplusplus
+#define PROCESSINGNDILIB_API extern "C" __declspec(dllimport)
+#else // __cplusplus
+#define PROCESSINGNDILIB_API __declspec(dllimport)
+#endif // __cplusplus
+#ifdef _WIN64
+#define NDILIB_LIBRARY_NAME "Processing.NDI.Lib.x64.dll"
+#define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
+#define NDILIB_REDIST_URL "http://ndi.link/NDIRedistV5"
+#else // _WIN64
+#define NDILIB_LIBRARY_NAME "Processing.NDI.Lib.x86.dll"
+#define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
+#define NDILIB_REDIST_URL "http://ndi.link/NDIRedistV5"
+#endif // _WIN64
+#endif // PROCESSINGNDILIB_EXPORTS
+#else  // _WIN32
+#ifdef __APPLE__
+#define NDILIB_LIBRARY_NAME "libndi.dylib"
+#define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
+#define NDILIB_REDIST_URL "http://ndi.link/NDIRedistV5Apple"
+#else // __APPLE__
+#define NDILIB_LIBRARY_NAME "libndi.so.5"
+#define NDILIB_REDIST_FOLDER "NDI_RUNTIME_DIR_V5"
+#define NDILIB_REDIST_URL ""
+#endif // __APPLE__
+#ifdef __cplusplus
+#define PROCESSINGNDILIB_API extern "C" __attribute((visibility("default")))
+#else // __cplusplus
+#define PROCESSINGNDILIB_API __attribute((visibility("default")))
+#endif // __cplusplus
+#endif // _WIN32
+#endif // PROCESSINGNDILIB_STATIC
 
 #ifndef PROCESSINGNDILIB_DEPRECATED
-#	ifdef _WIN32
-#		ifdef _MSC_VER
-#			define PROCESSINGNDILIB_DEPRECATED __declspec(deprecated)
-#		else // _MSC_VER
-#			define PROCESSINGNDILIB_DEPRECATED __attribute((deprecated))
-#		endif // _MSC_VER
-#	else // _WIN32
-#		define PROCESSINGNDILIB_DEPRECATED
-#	endif // _WIN32
+#ifdef _WIN32
+#ifdef _MSC_VER
+#define PROCESSINGNDILIB_DEPRECATED __declspec(deprecated)
+#else // _MSC_VER
+#define PROCESSINGNDILIB_DEPRECATED __attribute((deprecated))
+#endif // _MSC_VER
+#else  // _WIN32
+#define PROCESSINGNDILIB_DEPRECATED
+#endif // _WIN32
 #endif // PROCESSINGNDILIB_DEPRECATED
 
 #ifndef NDILIB_CPP_DEFAULT_CONSTRUCTORS
-#	ifdef __cplusplus
-#		define NDILIB_CPP_DEFAULT_CONSTRUCTORS 1
-#	else // __cplusplus
-#		define NDILIB_CPP_DEFAULT_CONSTRUCTORS 0
-#	endif // __cplusplus
+#ifdef __cplusplus
+#define NDILIB_CPP_DEFAULT_CONSTRUCTORS 1
+#else // __cplusplus
+#define NDILIB_CPP_DEFAULT_CONSTRUCTORS 0
+#endif // __cplusplus
 #endif // NDILIB_CPP_DEFAULT_CONSTRUCTORS
 
 #ifndef NDILIB_CPP_DEFAULT_VALUE
-#	ifdef __cplusplus
-#		define NDILIB_CPP_DEFAULT_VALUE(a) =(a)
-#	else // __cplusplus
-#		define NDILIB_CPP_DEFAULT_VALUE(a)
-#	endif // __cplusplus
+#ifdef __cplusplus
+#define NDILIB_CPP_DEFAULT_VALUE(a) = (a)
+#else // __cplusplus
+#define NDILIB_CPP_DEFAULT_VALUE(a)
+#endif // __cplusplus
 #endif // NDILIB_CPP_DEFAULT_VALUE
 
 // Data structures shared by multiple SDKs.
@@ -120,7 +120,7 @@ PROCESSINGNDILIB_API
 void NDIlib_destroy(void);
 
 PROCESSINGNDILIB_API
-const char* NDIlib_version(void);
+const char *NDIlib_version(void);
 
 // Recover whether the current CPU in the system is capable of running NDILib.
 PROCESSINGNDILIB_API

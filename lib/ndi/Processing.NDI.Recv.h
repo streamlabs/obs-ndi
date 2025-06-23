@@ -30,13 +30,15 @@
 // Structures and type definitions required by NDI finding.
 // The reference to an instance of the receiver.
 struct NDIlib_recv_instance_type;
-typedef struct NDIlib_recv_instance_type* NDIlib_recv_instance_t;
+typedef struct NDIlib_recv_instance_type *NDIlib_recv_instance_t;
 
 typedef enum NDIlib_recv_bandwidth_e {
 	NDIlib_recv_bandwidth_metadata_only = -10, // Receive metadata.
 	NDIlib_recv_bandwidth_audio_only = 10,     // Receive metadata, audio.
-	NDIlib_recv_bandwidth_lowest = 0,          // Receive metadata, audio, video at a lower bandwidth and resolution.
-	NDIlib_recv_bandwidth_highest = 100,       // Receive metadata, audio, video at full resolution.
+	NDIlib_recv_bandwidth_lowest =
+		0, // Receive metadata, audio, video at a lower bandwidth and resolution.
+	NDIlib_recv_bandwidth_highest =
+		100, // Receive metadata, audio, video at full resolution.
 
 	// Make sure this is a 32-bit enumeration.
 	NDIlib_recv_bandwidth_max = 0x7fffffff
@@ -85,15 +87,20 @@ typedef enum NDIlib_recv_color_format_e {
 	NDIlib_recv_color_format_best = 101,
 
 	// Legacy definitions for backwards compatibility.
-	NDIlib_recv_color_format_e_BGRX_BGRA = NDIlib_recv_color_format_BGRX_BGRA,
-	NDIlib_recv_color_format_e_UYVY_BGRA = NDIlib_recv_color_format_UYVY_BGRA,
-	NDIlib_recv_color_format_e_RGBX_RGBA = NDIlib_recv_color_format_RGBX_RGBA,
-	NDIlib_recv_color_format_e_UYVY_RGBA = NDIlib_recv_color_format_UYVY_RGBA,
+	NDIlib_recv_color_format_e_BGRX_BGRA =
+		NDIlib_recv_color_format_BGRX_BGRA,
+	NDIlib_recv_color_format_e_UYVY_BGRA =
+		NDIlib_recv_color_format_UYVY_BGRA,
+	NDIlib_recv_color_format_e_RGBX_RGBA =
+		NDIlib_recv_color_format_RGBX_RGBA,
+	NDIlib_recv_color_format_e_UYVY_RGBA =
+		NDIlib_recv_color_format_UYVY_RGBA,
 
 #ifdef _WIN32
 	// For Windows we can support flipped images which is unfortunately something that Microsoft decided to
 	// do back in the old days.
-	NDIlib_recv_color_format_BGRX_BGRA_flipped = 1000 + NDIlib_recv_color_format_BGRX_BGRA,
+	NDIlib_recv_color_format_BGRX_BGRA_flipped =
+		1000 + NDIlib_recv_color_format_BGRX_BGRA,
 #endif
 
 	// Make sure this is a 32-bit enumeration.
@@ -123,20 +130,20 @@ typedef struct NDIlib_recv_create_v3_t {
 	// of receive channel that you have. This is in many ways symmetric with the name of senders, so this
 	// might be "Channel 1" on your system. If this is NULL then it will use the filename of your application
 	// indexed with the number of the instance number of this receiver.
-	const char* p_ndi_recv_name;
+	const char *p_ndi_recv_name;
 
 #if NDILIB_CPP_DEFAULT_CONSTRUCTORS
 	NDIlib_recv_create_v3_t(
 		const NDIlib_source_t source_to_connect_to_ = NDIlib_source_t(),
-		NDIlib_recv_color_format_e color_format_ = NDIlib_recv_color_format_UYVY_BGRA,
-		NDIlib_recv_bandwidth_e bandwidth_ = NDIlib_recv_bandwidth_highest,
+		NDIlib_recv_color_format_e color_format_ =
+			NDIlib_recv_color_format_UYVY_BGRA,
+		NDIlib_recv_bandwidth_e bandwidth_ =
+			NDIlib_recv_bandwidth_highest,
 		bool allow_video_fields_ = true,
-		const char* p_ndi_name_ = NULL
-	);
+		const char *p_ndi_name_ = NULL);
 #endif // NDILIB_CPP_DEFAULT_CONSTRUCTORS
 
 } NDIlib_recv_create_v3_t;
-
 
 // This allows you determine the current performance levels of the receiving to be able to detect whether
 // frames have been dropped.
@@ -175,7 +182,9 @@ typedef struct NDIlib_recv_queue_t {
 // Create a new receiver instance. This will return NULL if it fails. If you create this with the default
 // settings (NULL) then it will automatically determine a receiver name.
 PROCESSINGNDILIB_API
-NDIlib_recv_instance_t NDIlib_recv_create_v3(const NDIlib_recv_create_v3_t* p_create_settings NDILIB_CPP_DEFAULT_VALUE(NULL));
+NDIlib_recv_instance_t
+NDIlib_recv_create_v3(const NDIlib_recv_create_v3_t *p_create_settings
+			      NDILIB_CPP_DEFAULT_VALUE(NULL));
 
 // This will destroy an existing receiver instance.
 PROCESSINGNDILIB_API
@@ -184,7 +193,9 @@ void NDIlib_recv_destroy(NDIlib_recv_instance_t p_instance);
 // This function allows you to change the connection to another video source, you can also disconnect it by
 // specifying a NULL here. This allows you to preserve a receiver without needing to.
 PROCESSINGNDILIB_API
-void NDIlib_recv_connect(NDIlib_recv_instance_t p_instance, const NDIlib_source_t* p_src NDILIB_CPP_DEFAULT_VALUE(NULL));
+void NDIlib_recv_connect(NDIlib_recv_instance_t p_instance,
+			 const NDIlib_source_t *p_src
+				 NDILIB_CPP_DEFAULT_VALUE(NULL));
 
 // This will allow you to receive video, audio and metadata frames. Any of the buffers can be NULL, in which
 // case data of that type will not be captured in this call. This call can be called simultaneously on
@@ -194,11 +205,14 @@ void NDIlib_recv_connect(NDIlib_recv_instance_t p_instance, const NDIlib_source_
 // appropriate free function below.
 PROCESSINGNDILIB_API
 NDIlib_frame_type_e NDIlib_recv_capture_v2(
-	NDIlib_recv_instance_t p_instance,     // The library instance.
-	NDIlib_video_frame_v2_t* p_video_data, // The video data received (can be NULL).
-	NDIlib_audio_frame_v2_t* p_audio_data, // The audio data received (can be NULL).
-	NDIlib_metadata_frame_t* p_metadata,   // The metadata received (can be NULL).
-	uint32_t timeout_in_ms                 // The amount of time in milliseconds to wait for data.
+	NDIlib_recv_instance_t p_instance, // The library instance.
+	NDIlib_video_frame_v2_t
+		*p_video_data, // The video data received (can be NULL).
+	NDIlib_audio_frame_v2_t
+		*p_audio_data, // The audio data received (can be NULL).
+	NDIlib_metadata_frame_t
+		*p_metadata, // The metadata received (can be NULL).
+	uint32_t timeout_in_ms // The amount of time in milliseconds to wait for data.
 );
 
 // This will allow you to receive video, audio and metadata frames. Any of the buffers can be NULL, in which
@@ -209,57 +223,67 @@ NDIlib_frame_type_e NDIlib_recv_capture_v2(
 // appropriate free function below.
 PROCESSINGNDILIB_API
 NDIlib_frame_type_e NDIlib_recv_capture_v3(
-	NDIlib_recv_instance_t p_instance,     // The library instance.
-	NDIlib_video_frame_v2_t* p_video_data, // The video data received (can be NULL).
-	NDIlib_audio_frame_v3_t* p_audio_data, // The audio data received (can be NULL).
-	NDIlib_metadata_frame_t* p_metadata,   // The metadata received (can be NULL).
-	uint32_t timeout_in_ms                 // The amount of time in milliseconds to wait for data.
+	NDIlib_recv_instance_t p_instance, // The library instance.
+	NDIlib_video_frame_v2_t
+		*p_video_data, // The video data received (can be NULL).
+	NDIlib_audio_frame_v3_t
+		*p_audio_data, // The audio data received (can be NULL).
+	NDIlib_metadata_frame_t
+		*p_metadata, // The metadata received (can be NULL).
+	uint32_t timeout_in_ms // The amount of time in milliseconds to wait for data.
 );
 
 // Free the buffers returned by capture for video.
 PROCESSINGNDILIB_API
-void NDIlib_recv_free_video_v2(NDIlib_recv_instance_t p_instance, const NDIlib_video_frame_v2_t* p_video_data);
+void NDIlib_recv_free_video_v2(NDIlib_recv_instance_t p_instance,
+			       const NDIlib_video_frame_v2_t *p_video_data);
 
 // Free the buffers returned by capture for audio.
 PROCESSINGNDILIB_API
-void NDIlib_recv_free_audio_v2(NDIlib_recv_instance_t p_instance, const NDIlib_audio_frame_v2_t* p_audio_data);
+void NDIlib_recv_free_audio_v2(NDIlib_recv_instance_t p_instance,
+			       const NDIlib_audio_frame_v2_t *p_audio_data);
 
 // Free the buffers returned by capture for audio.
 PROCESSINGNDILIB_API
-void NDIlib_recv_free_audio_v3(NDIlib_recv_instance_t p_instance, const NDIlib_audio_frame_v3_t* p_audio_data);
+void NDIlib_recv_free_audio_v3(NDIlib_recv_instance_t p_instance,
+			       const NDIlib_audio_frame_v3_t *p_audio_data);
 
 // Free the buffers returned by capture for metadata.
 PROCESSINGNDILIB_API
-void NDIlib_recv_free_metadata(NDIlib_recv_instance_t p_instance, const NDIlib_metadata_frame_t* p_metadata);
+void NDIlib_recv_free_metadata(NDIlib_recv_instance_t p_instance,
+			       const NDIlib_metadata_frame_t *p_metadata);
 
 // This will free a string that was allocated and returned by NDIlib_recv (for instance the
 // NDIlib_recv_get_web_control) function.
 PROCESSINGNDILIB_API
-void NDIlib_recv_free_string(NDIlib_recv_instance_t p_instance, const char* p_string);
+void NDIlib_recv_free_string(NDIlib_recv_instance_t p_instance,
+			     const char *p_string);
 
 // This function will send a meta message to the source that we are connected too. This returns FALSE if we
 // are not currently connected to anything.
 PROCESSINGNDILIB_API
-bool NDIlib_recv_send_metadata(NDIlib_recv_instance_t p_instance, const NDIlib_metadata_frame_t* p_metadata);
+bool NDIlib_recv_send_metadata(NDIlib_recv_instance_t p_instance,
+			       const NDIlib_metadata_frame_t *p_metadata);
 
 // Set the up-stream tally notifications. This returns FALSE if we are not currently connected to anything.
 // That said, the moment that we do connect to something it will automatically be sent the tally state.
 PROCESSINGNDILIB_API
-bool NDIlib_recv_set_tally(NDIlib_recv_instance_t p_instance, const NDIlib_tally_t* p_tally);
+bool NDIlib_recv_set_tally(NDIlib_recv_instance_t p_instance,
+			   const NDIlib_tally_t *p_tally);
 
 // Get the current performance structures. This can be used to determine if you have been calling
 // NDIlib_recv_capture fast enough, or if your processing of data is not keeping up with real-time. The total
 // structure will give you the total frame counts received, the dropped structure will tell you how many
 // frames have been dropped. Either of these could be NULL.
 PROCESSINGNDILIB_API
-void NDIlib_recv_get_performance(
-	NDIlib_recv_instance_t p_instance,
-	NDIlib_recv_performance_t* p_total, NDIlib_recv_performance_t* p_dropped
-);
+void NDIlib_recv_get_performance(NDIlib_recv_instance_t p_instance,
+				 NDIlib_recv_performance_t *p_total,
+				 NDIlib_recv_performance_t *p_dropped);
 
 // This will allow you to determine the current queue depth for all of the frame sources at any time.
 PROCESSINGNDILIB_API
-void NDIlib_recv_get_queue(NDIlib_recv_instance_t p_instance, NDIlib_recv_queue_t* p_total);
+void NDIlib_recv_get_queue(NDIlib_recv_instance_t p_instance,
+			   NDIlib_recv_queue_t *p_total);
 
 // Connection based metadata is data that is sent automatically each time a new connection is received. You
 // queue all of these up and they are sent on each connection. To reset them you need to clear them all and
@@ -270,7 +294,9 @@ void NDIlib_recv_clear_connection_metadata(NDIlib_recv_instance_t p_instance);
 // Add a connection metadata string to the list of what is sent on each new connection. If someone is already
 // connected then this string will be sent to them immediately.
 PROCESSINGNDILIB_API
-void NDIlib_recv_add_connection_metadata(NDIlib_recv_instance_t p_instance, const NDIlib_metadata_frame_t* p_metadata);
+void NDIlib_recv_add_connection_metadata(
+	NDIlib_recv_instance_t p_instance,
+	const NDIlib_metadata_frame_t *p_metadata);
 
 // Is this receiver currently connected to a source on the other end, or has the source not yet been found or
 // is no longer online. This will normally return 0 or 1.
@@ -284,4 +310,4 @@ int NDIlib_recv_get_no_connections(NDIlib_recv_instance_t p_instance);
 // To avoid the need to poll this function, you can know when the value of this function might have changed
 // when the NDILib_recv_capture* call would return NDIlib_frame_type_status_change.
 PROCESSINGNDILIB_API
-const char* NDIlib_recv_get_web_control(NDIlib_recv_instance_t p_instance);
+const char *NDIlib_recv_get_web_control(NDIlib_recv_instance_t p_instance);
