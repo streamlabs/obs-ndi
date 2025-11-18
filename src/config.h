@@ -17,9 +17,12 @@
 
 #pragma once
 
-#include <QDateTime>
-#include <QString>
-#include <QVersionNumber>
+// TODO: remove
+// #include <QDateTime>
+// #include <QString>
+// #include <QVersionNumber>
+
+#include <string>
 
 #define DEFAULT_UPDATE_LOCAL_PORT 5002
 
@@ -28,7 +31,7 @@
  * Linux: ~/.config/obs-studio/global.ini
  * MacOS: ~/Library/Application Support/obs-studio/global.ini
  * Windows: %APPDATA%\obs-studio\global.ini
- * 
+ *
  * Example:
  * ```
  * [NDIPlugin]
@@ -71,20 +74,16 @@ public:
 	static int DetectObsNdiForce;
 
 	bool OutputEnabled;
-	QString OutputName;
-	QString OutputGroups;
+	std::string OutputName;
+	std::string OutputGroups;
 	bool PreviewOutputEnabled;
-	QString PreviewOutputName;
-	QString PreviewOutputGroups;
+	std::string PreviewOutputName;
+	std::string PreviewOutputGroups;
 	bool TallyProgramEnabled;
 	bool TallyPreviewEnabled;
 
 	bool AutoCheckForUpdates();
 	void AutoCheckForUpdates(bool value);
-	void SkipUpdateVersion(const QVersionNumber &version);
-	QVersionNumber SkipUpdateVersion();
-	void LastUpdateCheck(const QDateTime &dateTime);
-	QDateTime LastUpdateCheck();
 	int MinAutoUpdateCheckIntervalSeconds();
 	void MinAutoUpdateCheckIntervalSeconds(int seconds);
 

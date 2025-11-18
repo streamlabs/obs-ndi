@@ -2,7 +2,7 @@
 
 include_guard(GLOBAL)
 
-include(helpers_common)
+include("cmake/common/helpers_common.cmake")
 
 # set_target_properties_obs: Set target properties for use in obs-studio
 function(set_target_properties_plugin target)

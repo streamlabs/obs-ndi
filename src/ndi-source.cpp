@@ -21,10 +21,8 @@
 #include <util/platform.h>
 #include <util/threading.h>
 
-#include <QDesktopServices>
-#include <QUrl>
-
 #include <thread>
+#include <sstream>
 
 #define PROP_SOURCE "ndi_source_name"
 #define PROP_BEHAVIOR "ndi_behavior"
@@ -66,6 +64,8 @@
 #define PROP_LATENCY_NORMAL 0
 #define PROP_LATENCY_LOW 1
 #define PROP_LATENCY_LOWEST 2
+
+extern NDIlib_find_instance_t ndi_finder;
 
 typedef struct ptz_t {
 	bool enabled;
@@ -208,18 +208,22 @@ obs_properties_t *ndi_source_getproperties(void *data)
 	obs_property_t *source_list = obs_properties_add_list(props, PROP_SOURCE,
 							      obs_module_text("NDIPlugin.SourceProps.SourceName"),
 							      OBS_COMBO_TYPE_EDITABLE, OBS_COMBO_FORMAT_STRING);
-	NDIFinder finder;
-	// Create a callback that is called when the NDI source list is complete
-	auto finder_callback = [source_list, s](void *ndi_names) {
-		auto ndi_sources = (std::vector<std::string> *)ndi_names;
-		for (auto &source : *ndi_sources) {
-			obs_property_list_add_string(source_list, source.c_str(), source.c_str());
+
+	uint32_t nbSources = 0;
+	const NDIlib_source_t *sources = ndiLib->find_get_current_sources(ndi_finder, &nbSources);
+	for (uint32_t i = 0; i < nbSources; ++i) {
+		obs_property_list_add_string(source_list, sources[i].p_ndi_name, sources[i].p_ndi_name);
+	}
+
+	if (nbSources) {
+		// Code to activate a newly create NDI source
+		if (!s->config.ndi_source_name || strlen(s->config.ndi_source_name) == 0) {
+			auto settings = obs_source_get_settings(s->obs_source);
+			obs_data_set_string(settings, PROP_SOURCE, sources[0].p_ndi_name);
+			obs_data_release(settings);
+
+			obs_source_update_properties(s->obs_source);
 		}
-		obs_source_update_properties(s->obs_source);
-	};
-	auto ndi_sources = finder.getNDISourceList(finder_callback);
-	for (auto &source : ndi_sources) {
-		obs_property_list_add_string(source_list, source.c_str(), source.c_str());
 	}
 
 	obs_property_t *behavior_list = obs_properties_add_list(props, PROP_BEHAVIOR,
@@ -301,14 +305,6 @@ obs_properties_t *ndi_source_getproperties(void *data)
 	obs_properties_add_group(props, PROP_PTZ, obs_module_text("NDIPlugin.SourceProps.PTZ"), OBS_GROUP_CHECKABLE,
 				 group_ptz);
 
-	auto group_ndi = obs_properties_create();
-	obs_properties_add_button(group_ndi, "ndi_website", NDI_OFFICIAL_WEB_URL,
-				  [](obs_properties_t *, obs_property_t *, void *) {
-					  QDesktopServices::openUrl(QUrl(rehostUrl(PLUGIN_REDIRECT_NDI_WEB_URL)));
-					  return false;
-				  });
-	obs_properties_add_group(props, "ndi", "NDI®", OBS_GROUP_NORMAL, group_ndi);
-
 	obs_log(LOG_DEBUG, "-ndi_source_getproperties(…)");
 
 	return props;
@@ -324,6 +320,8 @@ void ndi_source_getdefaults(obs_data_t *settings)
 	obs_data_set_default_int(settings, PROP_YUV_COLORSPACE, PROP_YUV_SPACE_BT709);
 	obs_data_set_default_int(settings, PROP_LATENCY, PROP_LATENCY_NORMAL);
 	obs_data_set_default_bool(settings, PROP_AUDIO, true);
+																									// TODO: comment here !!!!!!!!!!!!!!!!!!!!!!!
+																									// obs_data_set_default_bool(settings, PROP_HW_ACCEL, true);
 	obs_log(LOG_DEBUG, "-ndi_source_getdefaults(…)");
 }
 
@@ -1084,7 +1082,11 @@ void new_ndi_receiver_name(const char *obs_source_name, char **ndi_receiver_name
 	if (*ndi_receiver_name) {
 		bfree(*ndi_receiver_name);
 	}
-	*ndi_receiver_name = bstrdup(QT_TO_UTF8(QString("%1 '%2'").arg(PLUGIN_NAME, obs_source_name)));
+
+	std::ostringstream ss;
+	ss << PLUGIN_NAME << " " << obs_source_name;
+
+	*ndi_receiver_name = bstrdup(ss.str().c_str());
 #if 0
 	obs_log(LOG_DEBUG, "'%s' new_ndi_receiver_name: ndi_receiver_name='%s'",
 		obs_source_name, *ndi_receiver_name);

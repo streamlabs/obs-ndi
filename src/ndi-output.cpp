@@ -18,6 +18,8 @@
 #include "plugin-main.h"
 // #include "plugin-support.h"
 
+#include <map>
+
 static FORCE_INLINE uint32_t min_uint32(uint32_t a, uint32_t b)
 {
 	return a < b ? a : b;

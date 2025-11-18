@@ -36,7 +36,7 @@
             "bundleId": "org.distroav.distroav"
         }
     },
-    "name": "distroav",
+    "name": "obs-ndi",
     "displayName": "DistroAV",
     "version": "6.1.1",
     "website": "https://distroav.org",

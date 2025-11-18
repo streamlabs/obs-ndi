@@ -21,8 +21,8 @@
 #include <util/threading.h>
 #include <media-io/video-frame.h>
 
-#include <QDesktopServices>
-#include <QUrl>
+//#include <QDesktopServices>
+//#include <QUrl>
 
 #define TEXFORMAT GS_BGRA
 #define FLT_PROP_NAME "ndi_filter_ndiname"
@@ -87,13 +87,13 @@ obs_properties_t *ndi_filter_getproperties(void *)
 					  return true;
 				  });
 
-	auto group_ndi = obs_properties_create();
-	obs_properties_add_button(group_ndi, "ndi_website", NDI_OFFICIAL_WEB_URL,
-				  [](obs_properties_t *, obs_property_t *, void *) {
-					  QDesktopServices::openUrl(QUrl(rehostUrl(PLUGIN_REDIRECT_NDI_WEB_URL)));
-					  return false;
-				  });
-	obs_properties_add_group(props, "ndi", "NDI®", OBS_GROUP_NORMAL, group_ndi);
+	// auto group_ndi = obs_properties_create();
+	// obs_properties_add_button(group_ndi, "ndi_website", NDI_OFFICIAL_WEB_URL,
+	// 			  [](obs_properties_t *, obs_property_t *, void *) {
+	// 				  QDesktopServices::openUrl(QUrl(rehostUrl(PLUGIN_REDIRECT_NDI_WEB_URL)));
+	// 				  return false;
+	// 			  });
+	// obs_properties_add_group(props, "ndi", "NDI®", OBS_GROUP_NORMAL, group_ndi);
 
 	obs_log(LOG_DEBUG, "-ndi_filter_getproperties(...)");
 	return props;

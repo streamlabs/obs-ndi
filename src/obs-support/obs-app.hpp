@@ -23,7 +23,8 @@ In some places [nearly] the full code implementation is copied.
 
 #pragma once
 
-#include "qt_wrapper.hpp"
+// TODO: remove
+// #include "qt_wrapper.hpp"
 
 #include <obs-config.h>
 #include <obs-frontend-api.h>
@@ -53,7 +54,7 @@ inline const char *Str(const char *lookup)
 	return obs_module_text(lookup);
 }
 
-inline QString QTStr(const char *lookupVal)
-{
-	return QString::fromUtf8(Str(lookupVal));
-}
+// inline QString QTStr(const char *lookupVal)
+// {
+// 	return QString::fromUtf8(Str(lookupVal));
+// }
