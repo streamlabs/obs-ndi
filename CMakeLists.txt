@@ -10,7 +10,14 @@ set(ENABLE_FRONTEND_API ON)
 include(compilerconfig)
 include(defaults)
 include(helpers)
-include(./cmake/windows/helpers.cmake)
+
+if(OS_WINDOWS)
+  include(./cmake/windows/helpers.cmake)
+elseif(OS_MACOS)
+  include(./cmake/macos/helpers.cmake)
+else()
+  message(FATAL_ERROR "Unssupported OS")
+endif()
 
 add_library(${PROJECT_NAME} MODULE)
 

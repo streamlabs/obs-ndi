@@ -18,6 +18,10 @@ function(set_target_properties_plugin target)
     set_property(TARGET ${target} PROPERTY ${key} "${value}")
   endwhile()
 
+  if(NOT DEFINED PLUGIN_BUILD_NUMBER)
+    set(PLUGIN_BUILD_NUMBER "0")
+  endif()
+
   string(TIMESTAMP CURRENT_YEAR "%Y")
   set_target_properties(
     ${target}
