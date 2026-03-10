@@ -1,8 +1,12 @@
 #!/bin/bash
 
+#
+# This script calls libndi-get.sh and then libndi-create-deb.sh and libndi-create-dev-deb.sh
+#
+
 set -e
 
-LIBNDI_VERSION="5.5.3"
+LIBNDI_VERSION="5.6.0"
 
 SCRIPT_DIR=$(dirname "$0")
 
@@ -29,7 +33,7 @@ PAGER="cat" sudo checkinstall -y --type=debian --fstrans=no --nodoc \
     --pkglicense="Proprietary" \
     --maintainer="stephane.lepin@gmail.com" \
     --pkggroup="video" \
-    --pkgsource="http://ndi.newtek.com" \
+    --pkgsource="https://downloads.ndi.tv" \
     --pakdir="../package" ../CI/libndi-create-deb.sh
 
 PAGER="cat" sudo checkinstall -y --type=debian --fstrans=no --nodoc \
@@ -39,7 +43,7 @@ PAGER="cat" sudo checkinstall -y --type=debian --fstrans=no --nodoc \
     --requires="libndi5 \(\>= ${LIBNDI_VERSION}\)" \
     --pkglicense="Proprietary" --maintainer="stephane.lepin@gmail.com" \
     --pkggroup="video" \
-    --pkgsource="http://ndi.newtek.com" \
+    --pkgsource="https://downloads.ndi.tv" \
     --pakdir="../package" ../CI/libndi-create-dev-deb.sh
 
 sudo chmod ao+r ../package/*
