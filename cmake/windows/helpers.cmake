@@ -94,20 +94,3 @@ function(target_install_resources target)
     )
   endif()
 endfunction()
-
-# Helper function to add a specific resource to a bundle
-function(target_add_resource target resource)
-  message(DEBUG "Add resource '${resource}' to target ${target} at destination '${target_destination}'...")
-
-  install(FILES "${resource}" DESTINATION "${target}/data" COMPONENT Runtime)
-
-  add_custom_command(
-    TARGET ${target}
-    POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/rundir/$<CONFIG>/${target}"
-    COMMAND "${CMAKE_COMMAND}" -E copy "${resource}" "${CMAKE_CURRENT_BINARY_DIR}/rundir/$<CONFIG>/${target}"
-    COMMENT "Copy ${target} resource ${resource} to rundir"
-    VERBATIM
-  )
-  source_group("Resources" FILES "${resource}")
-endfunction()

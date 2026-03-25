@@ -95,11 +95,3 @@ function(target_install_resources target)
     endforeach()
   endif()
 endfunction()
-
-# target_add_resource: Helper function to add a specific resource to a bundle
-function(target_add_resource target resource)
-  message(DEBUG "Add resource ${resource} to target ${target} at destination ${destination}...")
-  target_sources(${target} PRIVATE "${resource}")
-  set_property(SOURCE "${resource}" PROPERTY MACOSX_PACKAGE_LOCATION Resources)
-  source_group("Resources" FILES "${resource}")
-endfunction()
