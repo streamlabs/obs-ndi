@@ -18,6 +18,8 @@ License along with this library. If not, see <https://www.gnu.org/licenses/>
 
 #ifdef _WIN32
 #include <Windows.h>
+#else
+#include <dlfcn.h>
 #endif
 
 #include <sys/stat.h>
@@ -27,7 +29,10 @@ License along with this library. If not, see <https://www.gnu.org/licenses/>
 
 #include "obs-ndi.h"
 
+#include <cstdlib>
 #include <iostream>
+#include <string>
+#include <vector>
 
 OBS_DECLARE_MODULE()
 OBS_MODULE_AUTHOR("Stephane Lepin (Palakis)")
@@ -52,13 +57,65 @@ struct obs_source_info alpha_filter_info;
 
 const NDIlib_v3* load_ndilib();
 
+#ifdef _WIN32
 HINSTANCE hGetProcIDDLL;
+#else
+void *hGetProcIDDLL = nullptr;
+#endif
 
 typedef const NDIlib_v3* (*NDIlib_v3_load_)(void);
 
 NDIlib_find_instance_t ndi_finder;
 obs_output_t* main_out;
 bool main_output_running = false;
+
+#ifndef _WIN32
+static const NDIlib_v3 *try_load_ndilib(const std::string &path)
+{
+	dlerror();
+	void *handle = dlopen(path.c_str(), RTLD_NOW | RTLD_LOCAL);
+	if (!handle) {
+		const char *error = dlerror();
+		blog(LOG_DEBUG, "Unable to load NDI runtime candidate '%s': %s", path.c_str(),
+		     error ? error : "unknown error");
+		return nullptr;
+	}
+
+	dlerror();
+	NDIlib_v3_load_ lib_load = reinterpret_cast<NDIlib_v3_load_>(dlsym(handle, "NDIlib_v3_load"));
+	const char *error = dlerror();
+	if (error || !lib_load) {
+		blog(LOG_ERROR, "NDIlib_v3_load not found in loaded library '%s': %s", path.c_str(),
+		     error ? error : "unknown error");
+		dlclose(handle);
+		return nullptr;
+	}
+
+	const NDIlib_v3 *lib = lib_load();
+	if (!lib) {
+		blog(LOG_ERROR, "NDIlib_v3_load returned null for loaded library '%s'", path.c_str());
+		dlclose(handle);
+		return nullptr;
+	}
+
+	hGetProcIDDLL = handle;
+	blog(LOG_INFO, "NDI runtime loaded successfully from '%s'", path.c_str());
+	return lib;
+}
+
+static void add_runtime_dir_candidates(std::vector<std::string> &candidates, const char *runtimeDir)
+{
+	if (!runtimeDir || !*runtimeDir)
+		return;
+
+	std::string base = runtimeDir;
+	candidates.push_back(base + "/" + NDILIB_LIBRARY_NAME);
+#ifdef __APPLE__
+	candidates.push_back(base + "/libndi.dylib");
+	candidates.push_back(base + "/libndi_advanced.dylib");
+#endif
+}
+#endif
 
 bool obs_module_load(void) {
     blog(LOG_INFO, "hello ! (version %s)", OBS_NDI_VERSION);
@@ -104,8 +161,14 @@ void obs_module_unload() {
         ndiLib->NDIlib_destroy();
     }
 
-	if (hGetProcIDDLL)
+	if (hGetProcIDDLL) {
+#ifdef _WIN32
 		FreeLibrary(hGetProcIDDLL);
+#else
+		dlclose(hGetProcIDDLL);
+#endif
+		hGetProcIDDLL = nullptr;
+	}
 }
 
 const char* obs_module_name() {
@@ -117,6 +180,7 @@ const char* obs_module_description() {
 }
 
 const NDIlib_v3* load_ndilib() {
+#ifdef _WIN32
     const int szEnvVar = GetEnvironmentVariable(TEXT(NDILIB_REDIST_FOLDER), 0, 0);
 
     if (szEnvVar == 0) return nullptr;
@@ -161,4 +225,35 @@ const NDIlib_v3* load_ndilib() {
 
     blog(LOG_ERROR, "Can't find the NDI library");
     return nullptr;
+#else
+	const char *runtimeDir = std::getenv(NDILIB_REDIST_FOLDER);
+	std::vector<std::string> candidates;
+	add_runtime_dir_candidates(candidates, runtimeDir);
+
+#ifdef __APPLE__
+	candidates.push_back("/Applications/NDI Scan Converter.app/Contents/Frameworks/libndi.dylib");
+	candidates.push_back("/Applications/NDI Video Monitor.app/Contents/Frameworks/libndi_advanced.dylib");
+	candidates.push_back("/Applications/NDI Test Patterns.app/Contents/Frameworks/libndi_advanced.dylib");
+	candidates.push_back("/Applications/NDI Virtual Input.app/Contents/Frameworks/libndi_advanced.dylib");
+	candidates.push_back("/Applications/NDI Discovery.app/Contents/Frameworks/libndi_advanced.dylib");
+	candidates.push_back("libndi.dylib");
+	candidates.push_back("libndi_advanced.dylib");
+#else
+	candidates.push_back(NDILIB_LIBRARY_NAME);
+#endif
+
+	for (const std::string &candidate : candidates) {
+		if (const NDIlib_v3 *lib = try_load_ndilib(candidate))
+			return lib;
+	}
+
+	if (!runtimeDir) {
+		blog(LOG_ERROR, "Can't find the NDI library. The runtime environment variable '%s' is not set.",
+		     NDILIB_REDIST_FOLDER);
+	} else {
+		blog(LOG_ERROR, "Can't find the NDI library using runtime directory '%s'", runtimeDir);
+	}
+
+	return nullptr;
+#endif
 }

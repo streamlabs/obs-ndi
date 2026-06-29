@@ -238,7 +238,7 @@ void ndi_filter_update(void* data, obs_data_t* settings) {
     display_desc.cy = 0;
 
     if (!s->is_audioonly) {
-        s->renderer = obs_display_create(&display_desc);
+        s->renderer = obs_display_create(&display_desc, 0);
         obs_display_add_draw_callback(s->renderer, ndi_filter_offscreen_render, s);
     }
 }

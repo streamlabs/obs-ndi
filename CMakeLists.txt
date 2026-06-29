@@ -35,7 +35,7 @@ add_library(obs-ndi MODULE
 	${obs-ndi_SOURCES}
 	${obs-ndi_HEADERS})
 
-include_directories("lib/ndi/Include")
+target_include_directories(obs-ndi SYSTEM PRIVATE "lib/ndi/Include")
 
 # Windows
 if(WIN32)
@@ -82,7 +82,29 @@ target_link_libraries(obs-ndi libobs)
 
 # OSX
 if(APPLE)
-	set_target_properties(obs-ndi PROPERTIES PREFIX "")
+	target_compile_options(obs-ndi PRIVATE
+		"-Wno-error=ignored-attributes"
+		"-Wno-error=newline-eof"
+		"-Wno-error=switch"
+		"-Wno-error=unused-parameter"
+		"-Wno-error=unused-variable")
+
+	if(COMMAND set_target_xcode_properties)
+		set_target_xcode_properties(
+			obs-ndi
+			PROPERTIES GCC_WARN_ABOUT_MISSING_NEWLINE NO
+				   GCC_WARN_CHECK_SWITCH_STATEMENTS NO
+				   GCC_WARN_UNUSED_PARAMETER NO
+				   GCC_WARN_UNUSED_VARIABLE NO
+				   WARNING_CFLAGS "-Wvla -Wformat-security -Wno-error=shorten-64-to-32 -Wno-error=ignored-attributes"
+		)
+	endif()
+
+	if(NOT NDI_EXTERNAL AND COMMAND set_target_properties_obs)
+		set_target_properties_obs(obs-ndi PROPERTIES FOLDER plugins/obs-ndi PREFIX "")
+	else()
+		set_target_properties(obs-ndi PROPERTIES PREFIX "")
+	endif()
 endif()
 
 # Linux

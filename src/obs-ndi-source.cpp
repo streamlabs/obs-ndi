@@ -59,8 +59,7 @@ obs_source_t* find_filter_by_id(obs_source_t* context, const char* id) {
 
             const char* id = obs_source_get_id(filter);
             if (strcmp(id, filter_search->query) == 0) {
-                obs_source_addref(filter);
-                filter_search->result = filter;
+                filter_search->result = obs_source_get_ref(filter);
             }
         },
     &filter_search);
@@ -350,8 +349,9 @@ void ndi_source_update(void* data, obs_data_t* settings) {
     s->ndi_receiver = ndiLib->NDIlib_recv_create_v2(&recv_desc);
     if (s->ndi_receiver) {
         if (hwAccelEnabled) {
+            static char hwAccelMetadataData[] = "<ndi_hwaccel enabled=\"true\"/>";
             NDIlib_metadata_frame_t hwAccelMetadata;
-            hwAccelMetadata.p_data = "<ndi_hwaccel enabled=\"true\"/>";
+            hwAccelMetadata.p_data = hwAccelMetadataData;
             ndiLib->NDIlib_recv_send_metadata(
                 s->ndi_receiver, &hwAccelMetadata);
         }
