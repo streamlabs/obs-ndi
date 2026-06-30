@@ -52,6 +52,27 @@ target_sources(
           src/config.cpp
           src/premultiplied-alpha-filter.cpp)
 
+if(OS_MACOS)
+  target_compile_options(
+    ${PROJECT_NAME}
+    PRIVATE -Wno-error=ignored-attributes
+            -Wno-error=newline-eof
+            -Wno-error=switch
+            -Wno-error=unused-parameter
+            -Wno-error=unused-variable
+  )
+
+  set_target_properties(
+    ${PROJECT_NAME}
+    PROPERTIES XCODE_ATTRIBUTE_GCC_WARN_ABOUT_MISSING_NEWLINE NO
+               XCODE_ATTRIBUTE_GCC_WARN_CHECK_SWITCH_STATEMENTS NO
+               XCODE_ATTRIBUTE_GCC_WARN_UNUSED_PARAMETER NO
+               XCODE_ATTRIBUTE_GCC_WARN_UNUSED_VARIABLE NO
+               XCODE_ATTRIBUTE_WARNING_CFLAGS
+                 "-Wvla -Wformat-security -Wno-error=shorten-64-to-32 -Wno-error=ignored-attributes"
+  )
+endif()
+
 set(valid_uuid FALSE)
 check_uuid(${WINDOWS_APP_UUID} valid_uuid)
 if(NOT valid_uuid)
@@ -63,5 +84,5 @@ configure_file(
   "${CMAKE_CURRENT_BINARY_DIR}/installer-Windows.generated.iss"
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/ndi)
+target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/ndi)
 set_target_properties_plugin(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
