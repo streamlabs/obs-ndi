@@ -85,4 +85,19 @@ configure_file(
 )
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/ndi)
-set_target_properties_plugin(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
+
+if(OS_MACOS AND COMMAND set_target_properties_obs)
+  if(TARGET plugin-support)
+    target_link_libraries(${PROJECT_NAME} PRIVATE plugin-support)
+  endif()
+
+  set_target_properties_obs(
+    ${PROJECT_NAME}
+    PROPERTIES
+      FOLDER plugins/obs-ndi
+      PREFIX ""
+      OUTPUT_NAME ${_name}
+  )
+else()
+  set_target_properties_plugin(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
+endif()
