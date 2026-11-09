@@ -11,12 +11,14 @@ include(compilerconfig)
 include(defaults)
 include(helpers)
 
-if(OS_WINDOWS)
-  include(./cmake/windows/helpers.cmake)
-elseif(OS_MACOS)
-  include(./cmake/macos/helpers.cmake)
-else()
-  message(FATAL_ERROR "Unssupported OS")
+if(NOT COMMAND set_target_properties_obs)
+  if(OS_WINDOWS)
+    include(./cmake/windows/helpers.cmake)
+  elseif(OS_MACOS)
+    include(./cmake/macos/helpers.cmake)
+  else()
+    message(FATAL_ERROR "Unssupported OS")
+  endif()
 endif()
 
 add_library(${PROJECT_NAME} MODULE)
@@ -86,10 +88,13 @@ configure_file(
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/ndi)
 
-if(OS_MACOS AND COMMAND set_target_properties_obs)
-  if(TARGET plugin-support)
-    target_link_libraries(${PROJECT_NAME} PRIVATE plugin-support)
+if(COMMAND set_target_properties_obs)
+  if(NOT TARGET plugin-support)
+    configure_file(src/plugin-support.c.in plugin-support.c @ONLY)
+    add_library(plugin-support STATIC plugin-support.c)
+    target_include_directories(plugin-support PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
   endif()
+  target_link_libraries(${PROJECT_NAME} PRIVATE plugin-support)
 
   set_target_properties_obs(
     ${PROJECT_NAME}
@@ -98,6 +103,11 @@ if(OS_MACOS AND COMMAND set_target_properties_obs)
       PREFIX ""
       OUTPUT_NAME ${_name}
   )
+  if(OS_WINDOWS)
+    string(TIMESTAMP CURRENT_YEAR "%Y")
+    configure_file(cmake/windows/resources/resource.rc.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.rc")
+    target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.rc")
+  endif()
 else()
   set_target_properties_plugin(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
 endif()
