@@ -86,7 +86,7 @@ configure_file(
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/ndi)
 
-if(OS_MACOS AND COMMAND set_target_properties_obs)
+if(COMMAND set_target_properties_obs)
   if(TARGET plugin-support)
     target_link_libraries(${PROJECT_NAME} PRIVATE plugin-support)
   endif()
@@ -98,6 +98,11 @@ if(OS_MACOS AND COMMAND set_target_properties_obs)
       PREFIX ""
       OUTPUT_NAME ${_name}
   )
+  if(OS_WINDOWS)
+    string(TIMESTAMP CURRENT_YEAR "%Y")
+    configure_file(cmake/windows/resources/resource.rc.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.rc")
+    target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.rc")
+  endif()
 else()
   set_target_properties_plugin(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
 endif()
