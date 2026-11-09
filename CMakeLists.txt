@@ -89,9 +89,12 @@ configure_file(
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/lib/ndi)
 
 if(COMMAND set_target_properties_obs)
-  if(TARGET plugin-support)
-    target_link_libraries(${PROJECT_NAME} PRIVATE plugin-support)
+  if(NOT TARGET plugin-support)
+    configure_file(src/plugin-support.c.in plugin-support.c @ONLY)
+    add_library(plugin-support STATIC plugin-support.c)
+    target_include_directories(plugin-support PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
   endif()
+  target_link_libraries(${PROJECT_NAME} PRIVATE plugin-support)
 
   set_target_properties_obs(
     ${PROJECT_NAME}
